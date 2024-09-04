@@ -15,7 +15,6 @@ load_dotenv()
 FRONTEND = os.getenv('FRONTEND')
 secret = os.getenv('SECRET')
 
-
 origins = [
     FRONTEND
 ]
@@ -36,7 +35,9 @@ app.include_router(auth, prefix='/auth', tags=['Auth'])
 
 @app.get('/')
 def testing():
-    return RedirectResponse(url='https://real-estate-website-ruddy.vercel.app/')
+    return {
+        "message": "Diremu said i couldn't do it but i did 😏"
+    }
 
 
 model.data.metadata.create_all(bind=engine)

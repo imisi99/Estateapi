@@ -14,7 +14,7 @@ auth = APIRouter()
 
 client_id = os.getenv("CLIENT_ID")
 client_secret = os.getenv("CLIENT_SECRET")
-redirect_uri = 'https://estate-api-wn9c.onrender.com/auth/callback'
+redirect_uri = 'https://estateapi-2t2c.onrender.com/auth/callback'
 
 
 @auth.get("/login")
@@ -88,10 +88,13 @@ def callback(request: Request, db: db_dependency):
     last_name = user_data['family_name']
     username = user_data['name']
 
+    if not (username and last_name and first_name and email):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Unable to get user data')
+
     user = db.query(UserModel).filter(UserModel.email == email).first()
     if not user:
         create_user = requests.post(
-            'https://estate-api-wn9c.onrender.com/user/signup',
+            'https://estateapi-2t2c.onrender.com/user/signup',
             json={
                 'firstname': first_name,
                 'lastname': last_name,
