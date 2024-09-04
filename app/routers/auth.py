@@ -91,7 +91,7 @@ def callback(request: Request, db: db_dependency):
     user = db.query(UserModel).filter(UserModel.email == email).first()
     if not user:
         create_user = requests.post(
-            'http://localhost:8006/user/signup',
+            'https://estate-api-wn9c.onrender.com/user/signup',
             json={
                 'firstname': first_name,
                 'lastname': last_name,
