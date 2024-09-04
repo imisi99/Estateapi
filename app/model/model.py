@@ -10,7 +10,7 @@ class UserModel(data):
     lastname = Column(String, nullable=False)
     username = Column(String, nullable=False, unique=True)
     email = Column(String, nullable=False, unique=True)
-    password = Column(String, nullable=False)
+    password = Column(String, nullable=True)
     is_admin = Column(Boolean, nullable=False)
 
 

@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr, field_validator
-from typing import Annotated
+from typing import Annotated, Optional
 import re
 
 
@@ -8,7 +8,7 @@ class UserSignin(BaseModel):
     lastname: Annotated[str, Field(min_length=3, max_length=50)]
     username: Annotated[str, Field(min_length=8, max_length=100)]
     email: Annotated[EmailStr, Field(examples=['example@gmail.com'])]
-    password: Annotated[str, Field(min_length=8)]
+    password: Optional[str] = Field(min_length=8, default=None)
 
     @field_validator('password')
     def validate_password(cls, value):

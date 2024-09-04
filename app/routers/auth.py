@@ -100,7 +100,6 @@ def callback(request: Request, db: db_dependency):
                 'lastname': last_name,
                 'username': username,
                 'email': email,
-                'password': None,
                 'is_admin': False
             }
         )
