@@ -199,7 +199,7 @@ async def delete_expired_otp(db: db_dependency, user: user_dependency):
 
     used = True
 
-    db.query(OTPModel).filter(OTPModel.expires_at < datetime.utcnow() or OTPModel.is_used == used).delete()
+    db.query(OTPModel).filter(or_(OTPModel.expires_at < datetime.utcnow(), OTPModel.is_used == used)).delete()
     db.commit()
 
-    return {'message': 'Expired OTPs deleted successfully'}
+    return {'message': 'Expired and Used OTPs deleted successfully'}

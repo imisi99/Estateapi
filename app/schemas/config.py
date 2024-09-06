@@ -2,6 +2,7 @@ import os
 import random
 from fastapi import HTTPException, Depends
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from typing import Annotated
 from starlette import status
 from ..model.database import begin
@@ -35,7 +36,7 @@ Algorithm = algorithm
 
 
 def authorization(username: str, password: str, db):
-    user = db.query(UserModel).filter(UserModel.username == username or UserModel.email == username).first()
+    user = db.query(UserModel).filter(or_(UserModel.username == username,  UserModel.email == username)).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid Credentials!')
     password = hashed.verify(password, user.password)
