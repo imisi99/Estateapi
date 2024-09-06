@@ -86,10 +86,14 @@ def callback(request: Request, db: db_dependency):
     email = user_data['email']
     first_name = user_data['given_name']
     last_name = user_data['family_name']
-    username = user_data['name']
+    username = last_name[0] + '.' + first_name
 
     if not (username and last_name and first_name and email):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Unable to get user data')
+
+    existing_username = db.query(UserModel).filter(UserModel.username == username).first()
+    if existing_username:
+        username = randomize_username(username)
 
     user = db.query(UserModel).filter(UserModel.email == email).first()
     if not user:

@@ -1,5 +1,6 @@
 import os
 import random
+import string
 from fastapi import HTTPException, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
@@ -129,3 +130,9 @@ def send_email(user_email, html_body, body, subject):
 def create_otp():
     otp = random.randint(1000, 9999)
     return str(otp)
+
+
+def randomize_username(username):
+    add_on = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
+    username += add_on
+    return username
