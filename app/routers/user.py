@@ -241,8 +241,10 @@ async def verify_otp(otp: OTP, db: db_dependency):
     if verify.is_used:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='OTP already used')
 
+    if verify.expires_at < datetime.utcnow():
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='OTP expired')
+
     verify.is_used = True
-    db.commit()
 
     user = db.query(UserModel).filter(UserModel.id == verify.user_id).first()
     if not user:

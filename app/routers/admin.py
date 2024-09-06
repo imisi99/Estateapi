@@ -4,7 +4,6 @@ from ..schemas.user_schema import *
 from ..schemas.config import *
 from ..schemas.admin_schema import *
 
-
 admin = APIRouter()
 
 
@@ -198,12 +197,9 @@ async def delete_expired_otp(db: db_dependency, user: user_dependency):
     if not user.get('admin'):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Permission Denied')
 
-    expired_otp = db.query(OTPModel).filter(OTPModel.expires_at < datetime.utcnow()).all()
-    if not expired_otp:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='No expired OTP found')
+    used = True
 
-    for otp in expired_otp:
-        db.delete(otp)
+    db.query(OTPModel).filter(OTPModel.expires_at < datetime.utcnow() or OTPModel.is_used == used).delete()
     db.commit()
 
-    return {'message': 'Expired OTP deleted successfully'}
+    return {'message': 'Expired OTPs deleted successfully'}
