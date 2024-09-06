@@ -22,7 +22,53 @@ async def user_sign_in(form: UserSignin, db: db_dependency):
         lastname=form.lastname,
         username=form.username,
         email=form.email,
-        password=hashed.hash(form.password) if form.password else None,
+        password=hashed.hash(form.password),
+        is_admin=False
+    )
+
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    body = f'Hi {user.firstname} \n Congratulations on making the right choice to trade with us'
+    html_body = (f'''
+    <div style="font-family: Arial, sans-serif; color: #333; background-color: #f0f4f8; padding: 20px; border-radius: 10px; text-align: center;">
+        <h1 style="color: #4caf50;">🎉 Welcome, {user.firstname}! 🎉</h1>
+        <p style="font-size: 18px;">
+            We’re thrilled to have you on board! You've made an excellent choice by joining us, and we can't wait to see you thrive with our platform.
+        </p>
+        <p style="font-size: 16px; margin-top: 20px;">
+            To get started, explore our features, connect with our community, and don't hesitate to reach out if you need any help.
+        </p>
+        <p style="font-size: 16px;">
+            Here’s to your success! 🥂
+        </p>
+        <div style="margin-top: 30px;">
+            <a href="https://real-estate-website-ruddy.vercel.app" style="text-decoration: none; background-color: #4caf50; color: white; padding: 10px 20px; border-radius: 5px; font-size: 16px;">Get Started</a>
+        </div>
+        <p style="font-size: 14px; color: #757575; margin-top: 30px;">
+            Best regards,<br/>
+            <strong>Estate API</strong>
+        </p>
+    </div>
+''')
+
+    subject = 'Welcome to our platform'
+
+    if send_email(user.email, html_body, body, subject):
+        return {'message': 'Sign-up Successful'}
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Error while sending email')
+
+
+@user.post('/google/signup', status_code=status.HTTP_201_CREATED)
+async def google_user_sign_in(form: GoogleSignin, db: db_dependency):
+    user = UserModel(
+        firstname=form.firstname,
+        lastname=form.lastname,
+        username=form.username,
+        email=form.email,
+        password=None,
         is_admin=False
     )
 

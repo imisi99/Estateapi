@@ -8,7 +8,7 @@ class UserSignin(BaseModel):
     lastname: Annotated[str, Field(min_length=3, max_length=50)]
     username: Annotated[str, Field(min_length=8, max_length=100)]
     email: Annotated[EmailStr, Field(examples=['example@gmail.com'])]
-    password: Optional[str] = Field(min_length=8, default=None)
+    password: Annotated[str, Field(min_length=8)]
 
     @field_validator('password')
     def validate_password(cls, value):
@@ -17,6 +17,13 @@ class UserSignin(BaseModel):
         if not re.search(r'[!@#$%^&*(),.?|{}:;<>]', value):
             raise ValueError('Password must contain at least one special character')
         return value
+
+
+class GoogleSignin(BaseModel):
+    firstname: Annotated[str, Field(min_length=3, max_length=50)]
+    lastname: Annotated[str, Field(min_length=3, max_length=50)]
+    username: Annotated[str, Field(min_length=8, max_length=100)]
+    email: Annotated[EmailStr, Field(examples=['example@gmail.com'])]
 
 
 class UserLogin(BaseModel):
