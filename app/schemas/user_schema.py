@@ -12,10 +12,8 @@ class UserSignin(BaseModel):
 
     @field_validator('password')
     def validate_password(cls, value):
-        if not re.search(r'[A-Z]', value):
-            raise ValueError('Password must contain at least one upper case character')
-        if not re.search(r'[!@#$%^&*(),.?|{}:;<>]', value):
-            raise ValueError('Password must contain at least one special character')
+        if not re.search(r'[A-Z]', value) or not re.search(r'[!@#$%^&*(),.?|{}:;<>]', value):
+            raise ValueError('Password must contain at least one upper case letter and one special character')
         return value
 
 
